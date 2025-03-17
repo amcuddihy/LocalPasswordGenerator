@@ -10,35 +10,37 @@
     <StackPanel Margin="30">
         <!-- Generated password textbox -->
         <TextBox Text="{Binding GeneratedPassword, Mode=OneWay}" 
-                     IsReadOnly="True" FontSize="16"/>
+                 IsReadOnly="True" 
+                 FontSize="16"
+                 Background="LightGray"/>
         
         <!-- Generate password button -->
         <Button Content="Generate Password"
-                    Style="{StaticResource GenerateButtonStyle}"
-                    Margin="10"
-                    Command="{Binding GeneratePasswordCommand}">
+                Style="{StaticResource GenerateButtonStyle}"
+                Margin="10"
+                Command="{Binding GeneratePasswordCommand}">
         </Button>
 
-        <!-- Password Length Textbox -->
+        <!-- Password Length Label and Textbox -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Password Length:"
-                           Margin="0,0,0,5"/>
+                       Margin="0,0,0,5"/>
             <TextBox Text="{Binding PasswordLength, Mode=OneWay}"
-                         IsReadOnly="True"
-                         FontSize="12"
-                         MinWidth="22"
-                         TextAlignment="Center"
-                         Margin="5,0,0,5"/>
+                     IsReadOnly="True"
+                     FontSize="12"
+                     MinWidth="22"
+                     TextAlignment="Center"
+                     Margin="5,0,0,5"/>
         </StackPanel>
         
         <!-- Password length slider -->
         <Slider Minimum="6" 
-                    Maximum="32" 
-                    Value="{Binding PasswordLength, Mode=TwoWay}"/>
+                Maximum="32" 
+                Value="{Binding PasswordLength, Mode=TwoWay}"/>
         
         <!-- Allow/Require check box grid -->
         <Grid Margin="10"
-                  Background="WhiteSmoke">
+              Background="LightGray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
