@@ -5,6 +5,13 @@ using System.Windows.Input;
 
 namespace LocalPasswordGenerator.ViewModels;
 
+/// <summary>
+/// This is the main ViewModel for the Password Generator app.
+/// It stores the properties and relay commands that the Views bind to.
+/// The ViewModel also acts as a go between for the Views and Models by calling methods
+/// and retrieving properties in the model classes, and then upating it's own properties, 
+/// which the Views have bound themselves to. 
+/// </summary>
 public class PasswordViewModel : INotifyPropertyChanged
 {
     private readonly PasswordGenerator _passwordGenerator;
@@ -142,6 +149,11 @@ public class PasswordViewModel : INotifyPropertyChanged
     public ICommand GeneratePasswordCommand { get; }
     public ICommand DefaultSpecialCharactersCommand { get; }
 
+    /// <summary>
+    /// Creates the relay commands that the views bind to. Also loads the user preferences using
+    /// the preferences service that has been passed in. 
+    /// </summary>
+    /// <param name="preferencesService">The service to use to Save/Load user preference data</param>
     public PasswordViewModel(IUserPreferencesService preferencesService) 
     {
         _passwordGenerator = new PasswordGenerator();

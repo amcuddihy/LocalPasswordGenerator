@@ -4,10 +4,19 @@ using System.IO;
 
 namespace LocalPasswordGenerator.Services;
 
+/// <summary>
+/// Uses the Newtonsoft.Json library to store the user settings as a JSON file.
+/// Implements the IUserPreferencesService interface so that it can be dependency
+/// injected into the PasswordViewModel.
+/// </summary>
 public class JsonUserPreferencesService : IUserPreferencesService
 {
     private static readonly string FilePath = "user_prefs.json";
 
+    /// <summary>
+    /// Loads the user preferences from a JSON file. 
+    /// </summary>
+    /// <returns>The user preferences as a UserPreferences object</returns>
     public UserPreferences Load() 
     {
         try 
@@ -25,6 +34,10 @@ public class JsonUserPreferencesService : IUserPreferencesService
         return new UserPreferences();
     }
 
+    /// <summary>
+    /// Saves the user preferences as a JSON file.
+    /// </summary>
+    /// <param name="preferences">User preferences object to be serialized into JSON and saved.</param>
     public void Save(UserPreferences preferences) 
     {
         try 

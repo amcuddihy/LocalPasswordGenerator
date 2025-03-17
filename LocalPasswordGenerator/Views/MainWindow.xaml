@@ -7,135 +7,150 @@
         mc:Ignorable="d"
         Title="Password Generator" Height="450" Width="350"
         Background="{StaticResource GradientMainBackground}">
-    <Grid Margin="10">
-        <StackPanel Margin="20">
-            <TextBox Text="{Binding GeneratedPassword, Mode=OneWay}" 
+    <StackPanel Margin="30">
+        <!-- Generated password textbox -->
+        <TextBox Text="{Binding GeneratedPassword, Mode=OneWay}" 
                      IsReadOnly="True" FontSize="16"/>
-
-            <Button Content="Generate Password"
+        
+        <!-- Generate password button -->
+        <Button Content="Generate Password"
                     Style="{StaticResource GenerateButtonStyle}"
                     Margin="10"
                     Command="{Binding GeneratePasswordCommand}">
-            </Button>
+        </Button>
 
-            <!-- Password Length Slider -->
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Password Length:"
+        <!-- Password Length Textbox -->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Password Length:"
                            Margin="0,0,0,5"/>
-                <TextBox Text="{Binding PasswordLength, Mode=OneWay}"
+            <TextBox Text="{Binding PasswordLength, Mode=OneWay}"
                          IsReadOnly="True"
                          FontSize="12"
                          MinWidth="22"
                          TextAlignment="Center"
                          Margin="5,0,0,5"/>
-            </StackPanel>
-
-            <Slider Minimum="6" 
+        </StackPanel>
+        
+        <!-- Password length slider -->
+        <Slider Minimum="6" 
                     Maximum="32" 
                     Value="{Binding PasswordLength, Mode=TwoWay}"/>
-
-            <Grid Margin="10"
+        
+        <!-- Allow/Require check box grid -->
+        <Grid Margin="10"
                   Background="WhiteSmoke">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Grid.Column="1"
-                           Text="Allow"
-                           HorizontalAlignment="Center"
-                           Margin="0,5,0,5"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="1"
+                       Text="Allow"
+                       HorizontalAlignment="Center"
+                       Margin="0,5,0,5"/>
 
-                <TextBlock Grid.Row="0"
-                           Grid.Column="2"
-                           Text="Require"
-                           HorizontalAlignment="Center"
-                           Margin="0,5,0,5"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="2"
+                       Text="Require"
+                       HorizontalAlignment="Center"
+                       Margin="0,5,0,5"/>
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
-                           Text="Lowercase"
-                           HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Lowercase"
+                       HorizontalAlignment="Center"/>
 
-                <TextBlock Grid.Row="2"
-                           Grid.Column="0"
-                           Text="Uppercase"
-                           HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Uppercase"
+                       HorizontalAlignment="Center"/>
 
-                <TextBlock Grid.Row="3"
-                           Grid.Column="0"
-                           Text="Numbers"
-                           HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="3"
+                       Grid.Column="0"
+                       Text="Numbers"
+                       HorizontalAlignment="Center"/>
 
-                <TextBlock Grid.Row="4"
-                           Grid.Column="0"
-                           Text="Symbols"
-                           HorizontalAlignment="Center"/>
-
-                <CheckBox Grid.Row="1" 
-                          Grid.Column="1"
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding AllowLowercase, Mode=TwoWay}"/>
-
-                <CheckBox Grid.Row="1" 
-                          Grid.Column="2"
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding RequireLowercase, Mode=TwoWay}"
-                          IsEnabled="{Binding AllowLowercase, Mode=OneWay}"/>
-
-                <CheckBox Grid.Row="2" 
-                          Grid.Column="1"
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding AllowUppercase, Mode=TwoWay}"/>
-
-                <CheckBox Grid.Row="2" 
-                          Grid.Column="2" 
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding RequireUppercase, Mode=TwoWay}"
-                          IsEnabled="{Binding AllowUppercase, Mode=OneWay}"/>
-
-                <CheckBox Grid.Row="3" 
-                          Grid.Column="1"
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding AllowNumbers, Mode=TwoWay}"/>
-
-                <CheckBox Grid.Row="3" 
-                          Grid.Column="2" 
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding RequireNumbers, Mode=TwoWay}"
-                          IsEnabled="{Binding AllowNumbers, Mode=OneWay}"/>
-
-                <CheckBox Grid.Row="4" 
-                          Grid.Column="1" 
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding AllowSymbols, Mode=TwoWay}"/>
-
-                <CheckBox Grid.Row="4" 
-                          Grid.Column="2"
-                          HorizontalAlignment="Center"
-                          IsChecked="{Binding RequireSymbols, Mode=TwoWay}"
-                          IsEnabled="{Binding AllowSymbols, Mode=OneWay}"/>
-            </Grid>
+            <TextBlock Grid.Row="4"
+                       Grid.Column="0"
+                       Text="Symbols"
+                       HorizontalAlignment="Center"/>
             
-            <TextBlock Text="Allowed Symbols: "/>
-            <TextBox Text="{Binding AllowedSpecialCharacters, Mode=TwoWay}"
-                     IsEnabled="{Binding AllowSymbols, Mode=OneWay}"
-                     FontSize="12"
-                     MinWidth="130"/>
-            <Button Content="Default"
-                    HorizontalAlignment="Left"
-                    MinWidth="80"
-                    Command="{Binding DefaultSpecialCharactersCommand}"/>
-        </StackPanel>
-    </Grid>
+            <!-- Allow lowercase checkbox -->
+            <CheckBox Grid.Row="1" 
+                      Grid.Column="1" 
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding AllowLowercase, Mode=TwoWay}"/>
+
+            <!-- Require lowercase checkbox -->
+            <CheckBox Grid.Row="1" 
+                      Grid.Column="2"
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding RequireLowercase, Mode=TwoWay}"
+                      IsEnabled="{Binding AllowLowercase, Mode=OneWay}"/>
+
+            <!-- Allow uppercase checkbox -->
+            <CheckBox Grid.Row="2" 
+                      Grid.Column="1"
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding AllowUppercase, Mode=TwoWay}"/>
+
+            <!-- Require uppercase checkbox -->
+            <CheckBox Grid.Row="2" 
+                      Grid.Column="2" 
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding RequireUppercase, Mode=TwoWay}"
+                      IsEnabled="{Binding AllowUppercase, Mode=OneWay}"/>
+
+            <!-- Allow numbers checkbox -->
+            <CheckBox Grid.Row="3" 
+                      Grid.Column="1"
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding AllowNumbers, Mode=TwoWay}"/>
+
+            <!-- Require numbers checkbox -->
+            <CheckBox Grid.Row="3" 
+                      Grid.Column="2" 
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding RequireNumbers, Mode=TwoWay}"
+                      IsEnabled="{Binding AllowNumbers, Mode=OneWay}"/>
+            
+            <!-- Allow symbols checkbox -->
+            <CheckBox Grid.Row="4" 
+                      Grid.Column="1" 
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding AllowSymbols, Mode=TwoWay}"/>
+
+            <!-- Require symbols checkbox -->
+            <CheckBox Grid.Row="4" 
+                      Grid.Column="2"
+                      HorizontalAlignment="Center"
+                      IsChecked="{Binding RequireSymbols, Mode=TwoWay}"
+                      IsEnabled="{Binding AllowSymbols, Mode=OneWay}"/>
+        </Grid>
+        
+        
+        <TextBlock Text="Allowed Symbols: "/>
+        
+        <!-- Allowed symbols textbox -->
+        <TextBox Text="{Binding AllowedSpecialCharacters, Mode=TwoWay}"
+                 IsEnabled="{Binding AllowSymbols, Mode=OneWay}"
+                 FontSize="12"
+                 MinWidth="130"/>
+        
+        <!-- Set symbols to default button -->
+        <Button Content="Default"
+                HorizontalAlignment="Left"
+                MinWidth="80"
+                Command="{Binding DefaultSpecialCharactersCommand}"/>
+    </StackPanel>
 </Window>

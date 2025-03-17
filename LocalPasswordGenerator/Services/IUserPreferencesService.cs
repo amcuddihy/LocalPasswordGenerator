@@ -2,8 +2,11 @@
 
 namespace LocalPasswordGenerator.Services;
 
-// Making the user preferences service an interface instead of a class allows a different service
-// to be easily dependency injected, the service class just needs to implement this interface.
+/// <summary>
+/// Interface that any class that is meant to be used as a User Preferences Service must implement.
+/// This allows any class that implements the interface to be easily dependency injected into the 
+/// PasswordViewModel as the service to be used to load the user preferences.
+/// </summary>
 public interface IUserPreferencesService
 {
     UserPreferences Load();
