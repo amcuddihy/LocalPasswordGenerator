@@ -19,7 +19,7 @@ public class PasswordStrengthToColorBrush : IValueConverter
                 case 3:
                     return Brushes.Green; // Strong
                 case 4:
-                    return Brushes.Blue; // Very Strong
+                    return Brushes.Purple; // Very Strong
                 default:
                     return Brushes.Transparent; // Default color
             }

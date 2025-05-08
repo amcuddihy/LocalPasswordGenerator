@@ -9,7 +9,7 @@
   <Identity
     Name="b8951342-2577-4b16-909b-f4d11697aed3"
     Publisher="CN=AlexanderCuddihy"
-    Version="1.0.2.0" />
+    Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>Password Generator</DisplayName>
