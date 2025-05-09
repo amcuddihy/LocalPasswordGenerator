@@ -17,7 +17,7 @@ public class PasswordViewModel : INotifyPropertyChanged
     private readonly PasswordGenerator _passwordGenerator;
     private readonly IUserPreferencesService _preferencesService;
     private readonly IPasswordStrengthService _passwordStrengthService;
-    private PasswordSettings _userPreferences;
+    private PasswordSettings _passwordSettings;
     private PasswordStrengthResult _passwordStrength;
 
     private string _generatedPassword;
@@ -35,10 +35,10 @@ public class PasswordViewModel : INotifyPropertyChanged
     public int PasswordLength 
     {
         get { 
-            return _userPreferences.PasswordLength; 
+            return _passwordSettings.PasswordLength; 
         }
         set { 
-            _userPreferences.PasswordLength = value; 
+            _passwordSettings.PasswordLength = value; 
 
             SavePreferences(); 
             GeneratePassword();
@@ -48,10 +48,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public string AllowedSpecialCharacters {
         get { 
-            return _userPreferences.AllowedSpecialCharacters; 
+            return _passwordSettings.AllowedSpecialCharacters; 
         }
         set {
-            _userPreferences.AllowedSpecialCharacters = value;
+            _passwordSettings.AllowedSpecialCharacters = value;
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(AllowedSpecialCharacters));
@@ -61,10 +61,10 @@ public class PasswordViewModel : INotifyPropertyChanged
     public bool AllowLowercase 
     {
         get { 
-            return _userPreferences.AllowLowercase; 
+            return _passwordSettings.AllowLowercase; 
         }
         set { 
-            _userPreferences.AllowLowercase = value; 
+            _passwordSettings.AllowLowercase = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(AllowLowercase));
@@ -74,10 +74,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool RequireLowercase {
         get { 
-            return _userPreferences.RequireLowercase; 
+            return _passwordSettings.RequireLowercase; 
         }
         set { 
-            _userPreferences.RequireLowercase = value; 
+            _passwordSettings.RequireLowercase = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(RequireLowercase)); 
@@ -86,10 +86,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool AllowUppercase {
         get { 
-            return _userPreferences.AllowUppercase; 
+            return _passwordSettings.AllowUppercase; 
         }
         set { 
-            _userPreferences.AllowUppercase = value; 
+            _passwordSettings.AllowUppercase = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(AllowUppercase));
@@ -99,10 +99,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool RequireUppercase {
         get { 
-            return _userPreferences.RequireUppercase; 
+            return _passwordSettings.RequireUppercase; 
         }
         set { 
-            _userPreferences.RequireUppercase = value; 
+            _passwordSettings.RequireUppercase = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(RequireUppercase)); 
@@ -111,10 +111,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool AllowNumbers {
         get { 
-            return _userPreferences.AllowNumbers; 
+            return _passwordSettings.AllowNumbers; 
         }
         set { 
-            _userPreferences.AllowNumbers = value; 
+            _passwordSettings.AllowNumbers = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(AllowNumbers));
@@ -124,10 +124,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool RequireNumbers {
         get { 
-            return _userPreferences.RequireNumbers; 
+            return _passwordSettings.RequireNumbers; 
         }
         set { 
-            _userPreferences.RequireNumbers = value; 
+            _passwordSettings.RequireNumbers = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(RequireNumbers)); 
@@ -136,10 +136,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool AllowSymbols {
         get { 
-            return _userPreferences.AllowSymbols; 
+            return _passwordSettings.AllowSymbols; 
         }
         set { 
-            _userPreferences.AllowSymbols = value; 
+            _passwordSettings.AllowSymbols = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(AllowSymbols));
@@ -149,10 +149,10 @@ public class PasswordViewModel : INotifyPropertyChanged
 
     public bool RequireSymbols {
         get { 
-            return _userPreferences.RequireSymbols; 
+            return _passwordSettings.RequireSymbols; 
         }
         set { 
-            _userPreferences.RequireSymbols = value; 
+            _passwordSettings.RequireSymbols = value; 
             SavePreferences();
             GeneratePassword();
             OnPropertyChanged(nameof(RequireSymbols)); 
@@ -176,14 +176,15 @@ public class PasswordViewModel : INotifyPropertyChanged
     /// Creates the relay commands that the views bind to. Also loads the user preferences using
     /// the preferences service that has been passed in. 
     /// </summary>
-    /// <param name="preferencesService">The service to use to Save/Load user preference data</param>
+    /// <param name="preferencesService">Service to use to Save/Load user preference data</param>
+    /// <param name="passwordStrengthService">Service to use to get the password strength</param>
     public PasswordViewModel(IUserPreferencesService preferencesService, IPasswordStrengthService passwordStrengthService) 
     {
         GeneratePasswordCommand = new RelayCommand(GeneratePassword);
         DefaultSpecialCharactersCommand = new RelayCommand(SetSymbolsToDefault);
 
         _preferencesService = preferencesService;
-        _userPreferences = _preferencesService.Load();
+        _passwordSettings = _preferencesService.Load();
 
         _passwordGenerator = new PasswordGenerator();
         _passwordStrengthService = passwordStrengthService;
@@ -203,32 +204,18 @@ public class PasswordViewModel : INotifyPropertyChanged
             AllowSymbols = true;
         }
 
-        var passwordSettings = new PasswordSettings()
-        {
-            PasswordLength = PasswordLength,
-            AllowedSpecialCharacters = AllowedSpecialCharacters,
-            AllowLowercase = AllowLowercase,
-            AllowUppercase = AllowUppercase,
-            AllowNumbers = AllowNumbers,
-            AllowSymbols = AllowSymbols,
-            RequireLowercase = RequireLowercase,
-            RequireUppercase = RequireUppercase,
-            RequireNumbers = RequireNumbers,
-            RequireSymbols = RequireSymbols
-        };
-
-        GeneratedPassword = _passwordGenerator.Generate(passwordSettings);
+        GeneratedPassword = _passwordGenerator.Generate(_passwordSettings);
         PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword);
     }
 
     private void SetSymbolsToDefault() 
     {
-        AllowedSpecialCharacters = _passwordGenerator.GetDefaultSymbols();
+        AllowedSpecialCharacters = new PasswordSettings().AllowedSpecialCharacters;
     }
 
     private void SavePreferences() 
     {
-        _preferencesService.Save(_userPreferences);
+        _preferencesService.Save(_passwordSettings);
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
