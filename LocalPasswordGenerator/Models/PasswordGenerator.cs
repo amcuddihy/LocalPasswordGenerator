@@ -10,17 +10,6 @@ public class PasswordGenerator
     const string lowercase = "abcdefghijklmnopqrstuvwxyz";
     const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const string numbers = "0123456789";
-    const string symbols = "!@#$%^&*()_-+=<>?";
-
-    /// <summary>
-    /// Returns the list of default symbols. Placing it here instead of the viewModel
-    /// to keep all of the business logic in the models.
-    /// </summary>
-    /// <returns>A string containing every default special character.</returns>
-    public string GetDefaultSymbols() 
-    {
-        return symbols;
-    }
 
     /// <summary>
     /// Generates a random password given the provided settings.
@@ -29,26 +18,26 @@ public class PasswordGenerator
     /// <returns>A randomly generated password as a string.</returns>
     public string Generate(PasswordSettings settings) 
     {
-        if (!settings.AllowLowercase && !settings.AllowUppercase && !settings.AllowNumbers && !settings.AllowSymbols) {
-            throw new ArgumentException("At least one character type must be selected.");
+        if (!settings.IncludeLowercase && !settings.IncludeUppercase && !settings.IncludeNumbers && !settings.IncludeSymbols) {
+            throw new ArgumentException("At least one character type must be included.");
         }
 
-        if (string.IsNullOrEmpty(settings.AllowedSpecialCharacters)) {
+        if (settings.IncludeSymbols && string.IsNullOrEmpty(settings.AllowedSpecialCharacters)) {
             throw new ArgumentException("Allowed special characters cannot be null or empty.");
         }
 
         // Create a pool of characters out of the allowed character types
         StringBuilder charPool = new StringBuilder();
-        if (settings.AllowLowercase) {
+        if (settings.IncludeLowercase) {
             charPool.Append(lowercase);
         }
-        if (settings.AllowUppercase) {
+        if (settings.IncludeUppercase) {
             charPool.Append(uppercase);
         }
-        if (settings.AllowNumbers) {
+        if (settings.IncludeNumbers) {
             charPool.Append(numbers);
         }
-        if (settings.AllowSymbols) {
+        if (settings.IncludeSymbols) {
             charPool.Append(settings.AllowedSpecialCharacters);
         }
 
@@ -56,11 +45,10 @@ public class PasswordGenerator
         string password = "";
         int attemptCount = 0;
 
-        // Use a do-while loop so that the password generation always happens once
         do {
-            StringBuilder tempPassword = new StringBuilder(); // Thousands of string appends could happen here, use StringBuilder.
+            StringBuilder tempPassword = new StringBuilder(); // StringBuilder is required, thousands of string appends could happen here
             for (int i = 0; i < settings.PasswordLength; i++) {
-                tempPassword.Append(charPool[random.Next(charPool.Length)]); // grab a random character from the charPool and append it to the password
+                tempPassword.Append(charPool[random.Next(charPool.Length)]); 
             }
 
             password = tempPassword.ToString(); // get the password into the correct format
@@ -73,7 +61,7 @@ public class PasswordGenerator
                 password = "";
                 break;
             }
-        } // Keep looping and generating passwords until a password is valid. Swapping characters would reduce the password security.
+        } // If password doesn't meet the criteria, try again. This is more secure than manually editing the password. 
         while (!IsPasswordValid(password, settings));
 
         return password;
@@ -88,10 +76,10 @@ public class PasswordGenerator
     private bool IsPasswordValid(string password, PasswordSettings settings) 
     {
         // Check each character set that is required, skip the character sets that aren't
-        bool lowercaseValid = !settings.RequireLowercase || password.Any(char.IsLower);
-        bool uppercaseValid = !settings.RequireUppercase || password.Any(char.IsUpper);
-        bool numbersValid = !settings.RequireNumbers || password.Any(char.IsDigit);
-        bool symbolsValid = !settings.RequireSymbols || password.Any(c => settings.AllowedSpecialCharacters.Contains(c));
+        bool lowercaseValid = !settings.IncludeLowercase || password.Any(char.IsLower);
+        bool uppercaseValid = !settings.IncludeUppercase || password.Any(char.IsUpper);
+        bool numbersValid = !settings.IncludeNumbers || password.Any(char.IsDigit);
+        bool symbolsValid = !settings.IncludeSymbols || password.Any(c => settings.AllowedSpecialCharacters.Contains(c));
 
         return lowercaseValid && uppercaseValid && numbersValid && symbolsValid;
     }

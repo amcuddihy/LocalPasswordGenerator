@@ -13,74 +13,15 @@ namespace LocalPasswordGenerator.Models;
 /// </summary>
 public class PasswordSettings
 {
-    public int PasswordLength { 
-        get; 
-        set; 
-    } = 12;
+    public int PasswordLength { get; set; } = 12;
 
-    public string AllowedSpecialCharacters { 
-        get; 
-        set; 
-    } = "!@#$%^&*()_-+=<>?";
+    public string AllowedSpecialCharacters { get; set; } = "!@#$%^&*()_-+=<>?";
 
-    public bool AllowLowercase { 
-        get; 
-        set; 
-    } = true;
-
-    private bool _requireLowercase = true;
-    public bool RequireLowercase {
-        get { 
-            return _requireLowercase && AllowLowercase; 
-        }
-        set { 
-            _requireLowercase = value; 
-        }
-    }
+    public bool IncludeLowercase { get; set; } = true;
     
-    public bool AllowUppercase { 
-        get; 
-        set; 
-    } = true;
+    public bool IncludeUppercase { get; set; } = true;
 
-    private bool _requireUppercase = true;
-    public bool RequireUppercase {
-        get { 
-            return _requireUppercase && AllowUppercase; 
-        }
-        set { 
-            _requireUppercase = value; 
-        }
-    }
+    public bool IncludeNumbers { get; set; } = true;
 
-    public bool AllowNumbers { 
-        get; 
-        set; 
-    } = true;
-
-    private bool _requireNumbers = true;
-    public bool RequireNumbers {
-        get { 
-            return _requireNumbers && AllowNumbers; 
-        }
-        set { 
-            _requireNumbers = value; 
-        }
-    }
-
-    public bool AllowSymbols { 
-        get; 
-        set; 
-    } = true;
-
-    private bool _requireSymbols = true;
-    public bool RequireSymbols {
-        get { 
-            return _requireSymbols && AllowSymbols; 
-        }
-        set { 
-            _requireSymbols = value; 
-        }
-    }
-
+    public bool IncludeSymbols { get; set; } = true;
 }

@@ -79,7 +79,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -87,92 +86,55 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
-
+            
+            <!-- Lowercase label -->
             <TextBlock Grid.Row="0"
-                       Grid.Column="1"
-                       Text="Allow"
-                       HorizontalAlignment="Center"
-                       Margin="0,5,0,5"/>
-
-            <TextBlock Grid.Row="0"
-                       Grid.Column="2"
-                       Text="Require"
-                       HorizontalAlignment="Center"
-                       Margin="0,5,0,5"/>
-
-            <TextBlock Grid.Row="1"
                        Grid.Column="0"
                        Text="Lowercase"
                        HorizontalAlignment="Center"/>
 
-            <TextBlock Grid.Row="2"
+            <!-- Uppercase label -->
+            <TextBlock Grid.Row="1"
                        Grid.Column="0"
                        Text="Uppercase"
                        HorizontalAlignment="Center"/>
 
-            <TextBlock Grid.Row="3"
+            <!-- Numbers label -->
+            <TextBlock Grid.Row="2"
                        Grid.Column="0"
                        Text="Numbers"
                        HorizontalAlignment="Center"/>
 
-            <TextBlock Grid.Row="4"
+            <!-- Symbols label -->
+            <TextBlock Grid.Row="3"
                        Grid.Column="0"
                        Text="Symbols"
                        HorizontalAlignment="Center"/>
             
             <!-- Allow lowercase checkbox -->
-            <CheckBox Grid.Row="1" 
+            <CheckBox Grid.Row="0" 
                       Grid.Column="1" 
                       HorizontalAlignment="Center"
-                      IsChecked="{Binding AllowLowercase, Mode=TwoWay}"/>
-
-            <!-- Require lowercase checkbox -->
-            <CheckBox Grid.Row="1" 
-                      Grid.Column="2"
-                      HorizontalAlignment="Center"
-                      IsChecked="{Binding RequireLowercase, Mode=TwoWay}"
-                      IsEnabled="{Binding AllowLowercase, Mode=OneWay}"/>
+                      IsChecked="{Binding IncludeLowercase, Mode=TwoWay}"/>
 
             <!-- Allow uppercase checkbox -->
-            <CheckBox Grid.Row="2" 
+            <CheckBox Grid.Row="1" 
                       Grid.Column="1"
                       HorizontalAlignment="Center"
-                      IsChecked="{Binding AllowUppercase, Mode=TwoWay}"/>
-
-            <!-- Require uppercase checkbox -->
-            <CheckBox Grid.Row="2" 
-                      Grid.Column="2" 
-                      HorizontalAlignment="Center"
-                      IsChecked="{Binding RequireUppercase, Mode=TwoWay}"
-                      IsEnabled="{Binding AllowUppercase, Mode=OneWay}"/>
+                      IsChecked="{Binding IncludeUppercase, Mode=TwoWay}"/>
 
             <!-- Allow numbers checkbox -->
-            <CheckBox Grid.Row="3" 
+            <CheckBox Grid.Row="2" 
                       Grid.Column="1"
                       HorizontalAlignment="Center"
-                      IsChecked="{Binding AllowNumbers, Mode=TwoWay}"/>
+                      IsChecked="{Binding IncludeNumbers, Mode=TwoWay}"/>
 
-            <!-- Require numbers checkbox -->
-            <CheckBox Grid.Row="3" 
-                      Grid.Column="2" 
-                      HorizontalAlignment="Center"
-                      IsChecked="{Binding RequireNumbers, Mode=TwoWay}"
-                      IsEnabled="{Binding AllowNumbers, Mode=OneWay}"/>
-            
             <!-- Allow symbols checkbox -->
-            <CheckBox Grid.Row="4" 
+            <CheckBox Grid.Row="3" 
                       Grid.Column="1" 
                       HorizontalAlignment="Center"
-                      IsChecked="{Binding AllowSymbols, Mode=TwoWay}"/>
-
-            <!-- Require symbols checkbox -->
-            <CheckBox Grid.Row="4" 
-                      Grid.Column="2"
-                      HorizontalAlignment="Center"
-                      IsChecked="{Binding RequireSymbols, Mode=TwoWay}"
-                      IsEnabled="{Binding AllowSymbols, Mode=OneWay}"/>
+                      IsChecked="{Binding IncludeSymbols, Mode=TwoWay}"/>
         </Grid>
         
         
@@ -180,7 +142,7 @@
         
         <!-- Allowed symbols textbox -->
         <TextBox Text="{Binding AllowedSpecialCharacters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 IsEnabled="{Binding AllowSymbols, Mode=OneWay}"
+                 IsEnabled="{Binding IncludeSymbols, Mode=OneWay}"
                  FontSize="12"
                  MinWidth="130"/>
         

@@ -17,14 +17,10 @@ public class PasswordTests
     [Fact]
     public void GeneratesPassword_WithAllCharacterTypes() { 
         var passwordSettings = new PasswordSettings();
-        passwordSettings.AllowLowercase = true;
-        passwordSettings.RequireLowercase = true;
-        passwordSettings.AllowUppercase = true;
-        passwordSettings.RequireUppercase = true;
-        passwordSettings.AllowNumbers = true;
-        passwordSettings.RequireNumbers = true;
-        passwordSettings.AllowSymbols = true;
-        passwordSettings.RequireSymbols = true;
+        passwordSettings.IncludeLowercase = true;
+        passwordSettings.IncludeUppercase = true;
+        passwordSettings.IncludeNumbers = true;
+        passwordSettings.IncludeSymbols = true;
 
         var password = new PasswordGenerator().Generate(passwordSettings);
 

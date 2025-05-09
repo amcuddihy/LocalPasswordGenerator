@@ -58,104 +58,52 @@ public class PasswordViewModel : INotifyPropertyChanged
         }
     }
 
-    public bool AllowLowercase 
+    public bool IncludeLowercase 
     {
         get { 
-            return _passwordSettings.AllowLowercase; 
+            return _passwordSettings.IncludeLowercase; 
         }
         set { 
-            _passwordSettings.AllowLowercase = value; 
+            _passwordSettings.IncludeLowercase = value; 
             SavePreferences();
             GeneratePassword();
-            OnPropertyChanged(nameof(AllowLowercase));
-            OnPropertyChanged(nameof(RequireLowercase));
+            OnPropertyChanged(nameof(IncludeLowercase));
         }
     }
 
-    public bool RequireLowercase {
+    public bool IncludeUppercase {
         get { 
-            return _passwordSettings.RequireLowercase; 
+            return _passwordSettings.IncludeUppercase; 
         }
         set { 
-            _passwordSettings.RequireLowercase = value; 
+            _passwordSettings.IncludeUppercase = value; 
             SavePreferences();
             GeneratePassword();
-            OnPropertyChanged(nameof(RequireLowercase)); 
+            OnPropertyChanged(nameof(IncludeUppercase));
         }
     }
 
-    public bool AllowUppercase {
+    public bool IncludeNumbers {
         get { 
-            return _passwordSettings.AllowUppercase; 
+            return _passwordSettings.IncludeNumbers; 
         }
         set { 
-            _passwordSettings.AllowUppercase = value; 
+            _passwordSettings.IncludeNumbers = value; 
             SavePreferences();
             GeneratePassword();
-            OnPropertyChanged(nameof(AllowUppercase));
-            OnPropertyChanged(nameof(RequireUppercase));
+            OnPropertyChanged(nameof(IncludeNumbers));
         }
     }
 
-    public bool RequireUppercase {
+    public bool IncludeSymbols {
         get { 
-            return _passwordSettings.RequireUppercase; 
+            return _passwordSettings.IncludeSymbols; 
         }
         set { 
-            _passwordSettings.RequireUppercase = value; 
+            _passwordSettings.IncludeSymbols = value; 
             SavePreferences();
             GeneratePassword();
-            OnPropertyChanged(nameof(RequireUppercase)); 
-        }
-    }
-
-    public bool AllowNumbers {
-        get { 
-            return _passwordSettings.AllowNumbers; 
-        }
-        set { 
-            _passwordSettings.AllowNumbers = value; 
-            SavePreferences();
-            GeneratePassword();
-            OnPropertyChanged(nameof(AllowNumbers));
-            OnPropertyChanged(nameof(RequireNumbers));
-        }
-    }
-
-    public bool RequireNumbers {
-        get { 
-            return _passwordSettings.RequireNumbers; 
-        }
-        set { 
-            _passwordSettings.RequireNumbers = value; 
-            SavePreferences();
-            GeneratePassword();
-            OnPropertyChanged(nameof(RequireNumbers)); 
-        }
-    }
-
-    public bool AllowSymbols {
-        get { 
-            return _passwordSettings.AllowSymbols; 
-        }
-        set { 
-            _passwordSettings.AllowSymbols = value; 
-            SavePreferences();
-            GeneratePassword();
-            OnPropertyChanged(nameof(AllowSymbols));
-            OnPropertyChanged(nameof(RequireSymbols));
-        }
-    }
-
-    public bool RequireSymbols {
-        get { 
-            return _passwordSettings.RequireSymbols; 
-        }
-        set { 
-            _passwordSettings.RequireSymbols = value; 
-            SavePreferences();
-            GeneratePassword();
-            OnPropertyChanged(nameof(RequireSymbols)); 
+            OnPropertyChanged(nameof(IncludeSymbols));
         }
     }
 
@@ -197,11 +145,11 @@ public class PasswordViewModel : INotifyPropertyChanged
             SetSymbolsToDefault();
         }
 
-        if (!AllowLowercase && !AllowUppercase && !AllowNumbers && !AllowSymbols) {
-            AllowLowercase = true;
-            AllowUppercase = true;
-            AllowNumbers = true;
-            AllowSymbols = true;
+        if (!IncludeLowercase && !IncludeUppercase && !IncludeNumbers && !IncludeSymbols) {
+            IncludeLowercase = true;
+            IncludeUppercase = true;
+            IncludeNumbers = true;
+            IncludeSymbols = true;
         }
 
         GeneratedPassword = _passwordGenerator.Generate(_passwordSettings);
