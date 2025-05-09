@@ -1,8 +1,4 @@
 ﻿
-
-using Newtonsoft.Json;
-using System.ComponentModel;
-
 namespace LocalPasswordGenerator.Models;
 
 /// <summary>
@@ -15,7 +11,7 @@ namespace LocalPasswordGenerator.Models;
 /// true. The UI prevents this from happening under normal operation of the software, this check
 /// is just in case someone edits the user preferences file manually. 
 /// </summary>
-public class UserPreferences
+public class PasswordSettings
 {
     public int PasswordLength { 
         get; 

@@ -9,6 +9,6 @@ namespace LocalPasswordGenerator.Services;
 /// </summary>
 public interface IUserPreferencesService
 {
-    UserPreferences Load();
-    void Save(UserPreferences preferences);
+    PasswordSettings Load();
+    void Save(PasswordSettings preferences);
 }

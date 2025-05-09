@@ -25,37 +25,31 @@ public class PasswordGenerator
     /// <summary>
     /// Generates a random password given the provided settings.
     /// </summary>
-    /// <param name="length">The desired length of the password.</param>
-    /// <param name="allowedSpecialChars">Specifies which special characters are allowed, as this varies website to website</param>
-    /// <param name="allowLowercase">Include lowercase characters in the random pool?</param>
-    /// <param name="allowUppercase">Include uppercase characters in the random pool?</param>
-    /// <param name="allowNumbers">Include numbers in the random pool?</param>
-    /// <param name="allowSymbols">Include special characters in the random pool?</param>
-    /// <param name="requireLowercase">Does the password need a lowercase character?</param>
-    /// <param name="requireUppercase">Does the password need an uppercase character?</param>
-    /// <param name="requireNumbers">Does the password need a number?</param>
-    /// <param name="requireSymbols">Does the password need a special character?</param>
+    /// <param name="settings">The settings that specify the password generation criteria.</param>
     /// <returns>A randomly generated password as a string.</returns>
-    public string Generate(int length, string allowedSpecialChars, bool allowLowercase, bool allowUppercase, bool allowNumbers, bool allowSymbols, 
-                                                                    bool requireLowercase, bool requireUppercase, bool requireNumbers, bool requireSymbols) 
+    public string Generate(PasswordSettings settings) 
     {
+        if (!settings.AllowLowercase && !settings.AllowUppercase && !settings.AllowNumbers && !settings.AllowSymbols) {
+            throw new ArgumentException("At least one character type must be selected.");
+        }
+
+        if (string.IsNullOrEmpty(settings.AllowedSpecialCharacters)) {
+            throw new ArgumentException("Allowed special characters cannot be null or empty.");
+        }
+
         // Create a pool of characters out of the allowed character types
         StringBuilder charPool = new StringBuilder();
-        if (allowLowercase) 
-        {
+        if (settings.AllowLowercase) {
             charPool.Append(lowercase);
         }
-        if (allowUppercase) 
-        {
+        if (settings.AllowUppercase) {
             charPool.Append(uppercase);
         }
-        if (allowNumbers) 
-        {
+        if (settings.AllowNumbers) {
             charPool.Append(numbers);
         }
-        if (allowSymbols) 
-        {
-            charPool.Append(allowedSpecialChars);
+        if (settings.AllowSymbols) {
+            charPool.Append(settings.AllowedSpecialCharacters);
         }
 
         Random random = new Random();
@@ -65,7 +59,7 @@ public class PasswordGenerator
         // Use a do-while loop so that the password generation always happens once
         do {
             StringBuilder tempPassword = new StringBuilder(); // Thousands of string appends could happen here, use StringBuilder.
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < settings.PasswordLength; i++) {
                 tempPassword.Append(charPool[random.Next(charPool.Length)]); // grab a random character from the charPool and append it to the password
             }
 
@@ -80,7 +74,7 @@ public class PasswordGenerator
                 break;
             }
         } // Keep looping and generating passwords until a password is valid. Swapping characters would reduce the password security.
-        while (!IsPasswordValid(password, allowedSpecialChars, requireLowercase, requireUppercase, requireNumbers, requireSymbols));
+        while (!IsPasswordValid(password, settings));
 
         return password;
     }
@@ -89,19 +83,15 @@ public class PasswordGenerator
     /// Checks whether the supplied password meets the supplied criteria or not.
     /// </summary>
     /// <param name="password">The password to check.</param>
-    /// <param name="allowedSpecialChars">The string of possible special characters for this password</param>
-    /// <param name="needLowercase">Password needs a lowercase character?</param>
-    /// <param name="needUppercase">Password needs an uppercase character?</param>
-    /// <param name="needNumbers">Password needs a number?</param>
-    /// <param name="needSymbols">Password needs a special character from the allowed list?</param>
+    /// <param name="settings">Settings that specify the criteria to check against.</param>
     /// <returns>'True' if the password passes all tests, 'False' otherwise.</returns>
-    private bool IsPasswordValid(string password, string allowedSpecialChars, bool needLowercase, bool needUppercase, bool needNumbers, bool needSymbols) 
+    private bool IsPasswordValid(string password, PasswordSettings settings) 
     {
         // Check each character set that is required, skip the character sets that aren't
-        bool lowercaseValid = !needLowercase || password.Any(char.IsLower);
-        bool uppercaseValid = !needUppercase || password.Any(char.IsUpper);
-        bool numbersValid = !needNumbers || password.Any(char.IsDigit);
-        bool symbolsValid = !needSymbols || password.Any(c => allowedSpecialChars.Contains(c));
+        bool lowercaseValid = !settings.RequireLowercase || password.Any(char.IsLower);
+        bool uppercaseValid = !settings.RequireUppercase || password.Any(char.IsUpper);
+        bool numbersValid = !settings.RequireNumbers || password.Any(char.IsDigit);
+        bool symbolsValid = !settings.RequireSymbols || password.Any(c => settings.AllowedSpecialCharacters.Contains(c));
 
         return lowercaseValid && uppercaseValid && numbersValid && symbolsValid;
     }

@@ -17,28 +17,28 @@ public class JsonUserPreferencesService : IUserPreferencesService
     /// Loads the user preferences from a JSON file. 
     /// </summary>
     /// <returns>The user preferences as a UserPreferences object</returns>
-    public UserPreferences Load() 
+    public PasswordSettings Load() 
     {
         try 
         {
             if (File.Exists(FilePath)) 
             {
                 string json = File.ReadAllText(FilePath);
-                return JsonConvert.DeserializeObject<UserPreferences>(json) ?? new UserPreferences();
+                return JsonConvert.DeserializeObject<PasswordSettings>(json) ?? new PasswordSettings();
             }
         }
         catch (Exception ex) 
         {
             Console.WriteLine($"Error loading preferences: {ex.Message}");
         }
-        return new UserPreferences();
+        return new PasswordSettings();
     }
 
     /// <summary>
     /// Saves the user preferences as a JSON file.
     /// </summary>
     /// <param name="preferences">User preferences object to be serialized into JSON and saved.</param>
-    public void Save(UserPreferences preferences) 
+    public void Save(PasswordSettings preferences) 
     {
         try 
         {

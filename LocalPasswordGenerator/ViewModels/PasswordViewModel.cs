@@ -17,7 +17,7 @@ public class PasswordViewModel : INotifyPropertyChanged
     private readonly PasswordGenerator _passwordGenerator;
     private readonly IUserPreferencesService _preferencesService;
     private readonly IPasswordStrengthService _passwordStrengthService;
-    private UserPreferences _userPreferences;
+    private PasswordSettings _userPreferences;
     private PasswordStrengthResult _passwordStrength;
 
     private string _generatedPassword;
@@ -179,24 +179,45 @@ public class PasswordViewModel : INotifyPropertyChanged
     /// <param name="preferencesService">The service to use to Save/Load user preference data</param>
     public PasswordViewModel(IUserPreferencesService preferencesService, IPasswordStrengthService passwordStrengthService) 
     {
+        GeneratePasswordCommand = new RelayCommand(GeneratePassword);
+        DefaultSpecialCharactersCommand = new RelayCommand(SetSymbolsToDefault);
+
         _preferencesService = preferencesService;
         _userPreferences = _preferencesService.Load();
 
         _passwordGenerator = new PasswordGenerator();
-        GeneratedPassword = _passwordGenerator.Generate(PasswordLength, AllowedSpecialCharacters, AllowLowercase, AllowUppercase, AllowNumbers, 
-                                                            AllowSymbols, RequireLowercase, RequireUppercase, RequireNumbers, RequireSymbols);
-
         _passwordStrengthService = passwordStrengthService;
-        PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword);
-
-        GeneratePasswordCommand = new RelayCommand(GeneratePassword);
-        DefaultSpecialCharactersCommand = new RelayCommand(SetSymbolsToDefault);
+        GeneratePassword();
     }
 
     private void GeneratePassword() 
     {
-        GeneratedPassword = _passwordGenerator.Generate(PasswordLength, AllowedSpecialCharacters, AllowLowercase, AllowUppercase, AllowNumbers,
-                                                    AllowSymbols, RequireLowercase, RequireUppercase, RequireNumbers, RequireSymbols);
+        if (string.IsNullOrEmpty(AllowedSpecialCharacters)) {
+            SetSymbolsToDefault();
+        }
+
+        if (!AllowLowercase && !AllowUppercase && !AllowNumbers && !AllowSymbols) {
+            AllowLowercase = true;
+            AllowUppercase = true;
+            AllowNumbers = true;
+            AllowSymbols = true;
+        }
+
+        var passwordSettings = new PasswordSettings()
+        {
+            PasswordLength = PasswordLength,
+            AllowedSpecialCharacters = AllowedSpecialCharacters,
+            AllowLowercase = AllowLowercase,
+            AllowUppercase = AllowUppercase,
+            AllowNumbers = AllowNumbers,
+            AllowSymbols = AllowSymbols,
+            RequireLowercase = RequireLowercase,
+            RequireUppercase = RequireUppercase,
+            RequireNumbers = RequireNumbers,
+            RequireSymbols = RequireSymbols
+        };
+
+        GeneratedPassword = _passwordGenerator.Generate(passwordSettings);
         PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword);
     }
 
