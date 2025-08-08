@@ -19,6 +19,7 @@ public class PasswordViewModel : INotifyPropertyChanged
     private readonly IPasswordStrengthService _passwordStrengthService;
     private PasswordSettings _passwordSettings;
     private PasswordStrengthResult _passwordStrength;
+    private int _previousPasswordLength = -1;
 
     private string _generatedPassword;
     public string GeneratedPassword 
@@ -107,6 +108,18 @@ public class PasswordViewModel : INotifyPropertyChanged
         }
     }
 
+    public int CrackSpeedSetting {
+        get {
+            return _passwordSettings.CrackSpeedSetting;
+        }
+        set {
+            _passwordSettings.CrackSpeedSetting = value;
+            SavePreferences();
+            EvaluatePasswordStrength();
+            OnPropertyChanged(nameof(CrackSpeedSetting));
+        }
+    }
+
     public PasswordStrengthResult PasswordStrength {
         get {
             return _passwordStrength;
@@ -152,8 +165,17 @@ public class PasswordViewModel : INotifyPropertyChanged
             IncludeSymbols = true;
         }
 
+        if (PasswordLength == _previousPasswordLength) {
+            return; // Prevents the password from being generated multiple times per each move of the slider
+        }
+        _previousPasswordLength = PasswordLength;
+
         GeneratedPassword = _passwordGenerator.Generate(_passwordSettings);
-        PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword);
+        EvaluatePasswordStrength();
+    }
+
+    private void EvaluatePasswordStrength() {
+        PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword, CrackSpeedSetting);
     }
 
     private void SetSymbolsToDefault() 

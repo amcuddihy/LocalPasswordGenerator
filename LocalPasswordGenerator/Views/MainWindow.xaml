@@ -35,24 +35,18 @@
                  Margin="0,0,0,5"
                  Foreground="{Binding PasswordStrength.Score, Converter={StaticResource StrengthColorConverter}}"/>
 
+            <ComboBox SelectedIndex="{Binding CrackSpeedSetting}">
+                <ComboBoxItem Content="Offline - Fast (10B/sec)"/>
+                <ComboBoxItem Content="Offline - Slow (10k/sec)"/>
+                <ComboBoxItem Content="Online - No Limits (10/sec)"/>
+                <ComboBoxItem Content="Online - Throttled (100/hr)"/>
+            </ComboBox>
+            
             <!-- Crack time -->
             <TextBlock Text="{Binding PasswordStrength.CrackTimeDisplay}"
                FontSize="12"
-               Foreground="Gray"
+               Foreground="DarkGray"
                Margin="0,0,0,5"/>
-
-            <!-- Suggestions list -->
-            <ItemsControl ItemsSource="{Binding PasswordStrength.Suggestions}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" 
-                           TextWrapping="Wrap"
-                           FontStyle="Italic"
-                           FontSize="12"
-                           Margin="0,2,0,0"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
 
         </StackPanel>
 
