@@ -1,23 +1,19 @@
-﻿using System.Text;
+﻿using LocalPasswordGenerator.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LocalPasswordGenerator.Models;
+namespace LocalPasswordGenerator.Services;
 
-/// <summary>
-/// Model class that handles the generation of passwords and stores the valid character lists.
-/// </summary>
-public class PasswordGenerator
+public class SimplePasswordGeneratorService : IPasswordGeneratorService 
 {
     const string lowercase = "abcdefghijklmnopqrstuvwxyz";
     const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const string numbers = "0123456789";
 
-    /// <summary>
-    /// Generates a random password given the provided settings.
-    /// </summary>
-    /// <param name="settings">The settings that specify the password generation criteria.</param>
-    /// <returns>A randomly generated password as a string.</returns>
-    public string Generate(PasswordSettings settings) 
-    {
+    public string GeneratePassword(PasswordSettings settings) {
         if (!settings.IncludeLowercase && !settings.IncludeUppercase && !settings.IncludeNumbers && !settings.IncludeSymbols) {
             throw new ArgumentException("At least one character type must be included.");
         }
@@ -48,10 +44,10 @@ public class PasswordGenerator
         do {
             StringBuilder tempPassword = new StringBuilder(); // StringBuilder is required, thousands of string appends could happen here
             for (int i = 0; i < settings.PasswordLength; i++) {
-                tempPassword.Append(charPool[random.Next(charPool.Length)]); 
+                tempPassword.Append(charPool[random.Next(charPool.Length)]);
             }
 
-            password = tempPassword.ToString(); // get the password into the correct format
+            password = tempPassword.ToString();
             attemptCount++;
 
             /* If attempt count is greater than 100, something has gone wrong, just abort. 
@@ -67,19 +63,26 @@ public class PasswordGenerator
         return password;
     }
 
-    /// <summary>
-    /// Checks whether the supplied password meets the supplied criteria or not.
-    /// </summary>
-    /// <param name="password">The password to check.</param>
-    /// <param name="settings">Settings that specify the criteria to check against.</param>
-    /// <returns>'True' if the password passes all tests, 'False' otherwise.</returns>
-    private bool IsPasswordValid(string password, PasswordSettings settings) 
-    {
-        // Check each character set that is required, skip the character sets that aren't
-        bool lowercaseValid = !settings.IncludeLowercase || password.Any(char.IsLower);
-        bool uppercaseValid = !settings.IncludeUppercase || password.Any(char.IsUpper);
-        bool numbersValid = !settings.IncludeNumbers || password.Any(char.IsDigit);
-        bool symbolsValid = !settings.IncludeSymbols || password.Any(c => settings.AllowedSpecialCharacters.Contains(c));
+    private bool IsPasswordValid(string password, PasswordSettings settings) {
+        bool lowercaseValid = true;
+        if (settings.IncludeLowercase) {
+            lowercaseValid = password.Any(char.IsLower);
+        }
+
+        bool uppercaseValid = true;
+        if (settings.IncludeUppercase) { 
+            uppercaseValid  = password.Any(char.IsUpper); 
+        }
+
+        bool numbersValid = true;
+        if (settings.IncludeNumbers) { 
+            numbersValid = password.Any(char.IsDigit);
+        }
+
+        bool symbolsValid = true; 
+        if (settings.IncludeSymbols) { 
+            symbolsValid = password.Any(c => settings.AllowedSpecialCharacters.Contains(c)); 
+        }
 
         return lowercaseValid && uppercaseValid && numbersValid && symbolsValid;
     }

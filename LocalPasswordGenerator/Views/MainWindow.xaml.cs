@@ -22,10 +22,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        // This is where a different service can be dependency injected into the PasswordViewModel the 'new JsonUserPreferencesService();'
-        // can be replaced by the constructor of any class that implements the IUSerPreferenceService interface and it will work. 
         IUserPreferencesService preferencesService = new JsonUserPreferencesService();
+        IPasswordGeneratorService passwordGeneratorService = new SimplePasswordGeneratorService();
+        
 
-        DataContext = new PasswordViewModel(preferencesService);
+        DataContext = new PasswordViewModel(preferencesService, passwordGeneratorService);
     }
 }

@@ -5,18 +5,13 @@ using System.Windows.Input;
 
 namespace LocalPasswordGenerator.ViewModels;
 
-/// <summary>
-/// This is the main ViewModel for the Password Generator app.
-/// It stores the properties and relay commands that the Views bind to.
-/// The ViewModel also acts as a go between for the Views and Models by calling methods
-/// and retrieving properties in the model classes, and then upating it's own properties, 
-/// which the Views have bound themselves to. 
-/// </summary>
 public class PasswordViewModel : INotifyPropertyChanged
 {
-    private readonly PasswordGenerator _passwordGenerator;
+    private readonly IPasswordGeneratorService _passwordGenerator;
     private readonly IUserPreferencesService _preferencesService;
+
     private PasswordSettings _passwordSettings;
+
     private int _previousPasswordLength = -1;
 
     private string _generatedPassword;
@@ -37,6 +32,11 @@ public class PasswordViewModel : INotifyPropertyChanged
             return _passwordSettings.PasswordLength; 
         }
         set { 
+            if (value == _previousPasswordLength) {
+                return; // The slider is firing multiple times per increment/decrement
+            }
+            _previousPasswordLength = value;
+
             _passwordSettings.PasswordLength = value; 
 
             SavePreferences(); 
@@ -109,30 +109,29 @@ public class PasswordViewModel : INotifyPropertyChanged
     public ICommand GeneratePasswordCommand { get; }
     public ICommand DefaultSpecialCharactersCommand { get; }
 
-    /// <summary>
-    /// Creates the relay commands that the views bind to. Also loads the user preferences using
-    /// the preferences service that has been passed in. 
-    /// </summary>
-    /// <param name="preferencesService">Service to use to Save/Load user preference data</param>
-    /// <param name="passwordStrengthService">Service to use to get the password strength</param>
-    public PasswordViewModel(IUserPreferencesService preferencesService) 
+    public PasswordViewModel(IUserPreferencesService preferencesService, IPasswordGeneratorService passwordGenerator) 
     {
         GeneratePasswordCommand = new RelayCommand(GeneratePassword);
         DefaultSpecialCharactersCommand = new RelayCommand(SetSymbolsToDefault);
 
         _preferencesService = preferencesService;
-        _passwordSettings = _preferencesService.Load();
+        _passwordSettings = _preferencesService.Load(); // this is the only time this is done, so no wrapper function is used
 
-        _passwordGenerator = new PasswordGenerator();
+        _passwordGenerator = passwordGenerator;
         GeneratePassword();
     }
 
     private void GeneratePassword() 
     {
+        // Reset to default special characters if the field is empty
+        // If the user doesn't want special characters, they should uncheck the include check box
+        // Otherwise the password generator will fail and the user will be confused by the empty text box 
         if (string.IsNullOrEmpty(AllowedSpecialCharacters)) {
             SetSymbolsToDefault();
         }
 
+        // Ensure at least one character type is selected. This is assuming the user did this in error or doesn't understand what it means.
+        // Resetting to all character types as that is the most likely configuration and it is tedious to reselect each box individually.
         if (!IncludeLowercase && !IncludeUppercase && !IncludeNumbers && !IncludeSymbols) {
             IncludeLowercase = true;
             IncludeUppercase = true;
@@ -140,12 +139,7 @@ public class PasswordViewModel : INotifyPropertyChanged
             IncludeSymbols = true;
         }
 
-        if (PasswordLength == _previousPasswordLength) {
-            return; // Prevents the password from being generated multiple times per each move of the slider
-        }
-        _previousPasswordLength = PasswordLength;
-
-        GeneratedPassword = _passwordGenerator.Generate(_passwordSettings);
+        GeneratedPassword = _passwordGenerator.GeneratePassword(_passwordSettings);
     }
 
     private void SetSymbolsToDefault() 
