@@ -7,8 +7,8 @@ namespace LocalPasswordGenerator.ViewModels;
 
 public class PasswordViewModel : INotifyPropertyChanged
 {
-    private readonly IPasswordGeneratorService _passwordGenerator;
-    private readonly IUserPreferencesService _preferencesService;
+    private IPasswordGeneratorService _passwordGenerator;
+    private IUserPreferencesService _preferencesService;
 
     private PasswordSettings _passwordSettings;
 
@@ -121,6 +121,7 @@ public class PasswordViewModel : INotifyPropertyChanged
         GeneratePassword();
     }
 
+    // This is called by the property setters as it is assumed the user wants a new password if the settings change.
     private void GeneratePassword() 
     {
         // Reset to default special characters if the field is empty
@@ -147,11 +148,14 @@ public class PasswordViewModel : INotifyPropertyChanged
         AllowedSpecialCharacters = new PasswordSettings().AllowedSpecialCharacters;
     }
 
+    // Called by every property setter to save the updated preferences automatically after anything changes.
     private void SavePreferences() 
     {
         _preferencesService.Save(_passwordSettings);
     }
 
+    // The properties need to call OnPropertyChanged in their setters to notify the view of changes.
+    // Otherwise the view will not update when the properties of this ViewModel change.
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(string propertyName) 
     {
