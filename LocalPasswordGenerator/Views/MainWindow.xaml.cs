@@ -25,7 +25,8 @@ public partial class MainWindow : Window
         IUserPreferencesService preferencesService = new JsonUserPreferencesService();
         IPasswordGeneratorService passwordGeneratorService = new SimplePasswordGeneratorService();
         
-
+        // Unfortunately this critical bit of code has to be hidden away here in the MainWindow.xaml.cs file.
+        // I do not know of a way to set the DataContext to the dependency injected services from anywhere outside of this file.
         DataContext = new PasswordViewModel(preferencesService, passwordGeneratorService);
     }
 }
