@@ -16,9 +16,7 @@ public class PasswordViewModel : INotifyPropertyChanged
 {
     private readonly PasswordGenerator _passwordGenerator;
     private readonly IUserPreferencesService _preferencesService;
-    private readonly IPasswordStrengthService _passwordStrengthService;
     private PasswordSettings _passwordSettings;
-    private PasswordStrengthResult _passwordStrength;
     private int _previousPasswordLength = -1;
 
     private string _generatedPassword;
@@ -108,28 +106,6 @@ public class PasswordViewModel : INotifyPropertyChanged
         }
     }
 
-    public int CrackSpeedSetting {
-        get {
-            return _passwordSettings.CrackSpeedSetting;
-        }
-        set {
-            _passwordSettings.CrackSpeedSetting = value;
-            SavePreferences();
-            EvaluatePasswordStrength();
-            OnPropertyChanged(nameof(CrackSpeedSetting));
-        }
-    }
-
-    public PasswordStrengthResult PasswordStrength {
-        get {
-            return _passwordStrength;
-        }
-        set {
-            _passwordStrength = value;
-            OnPropertyChanged(nameof(PasswordStrength));
-        }
-    }
-
     public ICommand GeneratePasswordCommand { get; }
     public ICommand DefaultSpecialCharactersCommand { get; }
 
@@ -139,7 +115,7 @@ public class PasswordViewModel : INotifyPropertyChanged
     /// </summary>
     /// <param name="preferencesService">Service to use to Save/Load user preference data</param>
     /// <param name="passwordStrengthService">Service to use to get the password strength</param>
-    public PasswordViewModel(IUserPreferencesService preferencesService, IPasswordStrengthService passwordStrengthService) 
+    public PasswordViewModel(IUserPreferencesService preferencesService) 
     {
         GeneratePasswordCommand = new RelayCommand(GeneratePassword);
         DefaultSpecialCharactersCommand = new RelayCommand(SetSymbolsToDefault);
@@ -148,7 +124,6 @@ public class PasswordViewModel : INotifyPropertyChanged
         _passwordSettings = _preferencesService.Load();
 
         _passwordGenerator = new PasswordGenerator();
-        _passwordStrengthService = passwordStrengthService;
         GeneratePassword();
     }
 
@@ -171,11 +146,6 @@ public class PasswordViewModel : INotifyPropertyChanged
         _previousPasswordLength = PasswordLength;
 
         GeneratedPassword = _passwordGenerator.Generate(_passwordSettings);
-        EvaluatePasswordStrength();
-    }
-
-    private void EvaluatePasswordStrength() {
-        PasswordStrength = _passwordStrengthService.GetPasswordStrength(GeneratedPassword, CrackSpeedSetting);
     }
 
     private void SetSymbolsToDefault() 

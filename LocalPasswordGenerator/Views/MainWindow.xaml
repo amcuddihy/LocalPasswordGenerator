@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LocalPasswordGenerator"
         xmlns:converters="clr-namespace:LocalPasswordGenerator.Converters"
         mc:Ignorable="d"
-        Title="Password Generator" Height="450" Width="350"
+        Title="Password Generator" Height="325" Width="350"
         Background="{StaticResource GradientMainBackground}">
     <Window.Resources>
         <converters:PasswordStrengthToColorBrush x:Key="StrengthColorConverter"/>
@@ -19,47 +19,16 @@
                  FontSize="16"
                  Background="LightGray"/>
 
-        <StackPanel Margin="10" Orientation="Vertical" Width="250">
-
-            <!-- Label -->
-            <TextBlock Text="{Binding PasswordStrength.Label}"
-               FontWeight="Bold"
-               FontSize="14"
-               Margin="0,0,0,5"/>
-
-            <!-- Progress bar -->
-            <ProgressBar Value="{Binding PasswordStrength.Score}"
-                 Minimum="0"
-                 Maximum="4"
-                 Height="20"
-                 Margin="0,0,0,5"
-                 Foreground="{Binding PasswordStrength.Score, Converter={StaticResource StrengthColorConverter}}"/>
-
-            <ComboBox SelectedIndex="{Binding CrackSpeedSetting}">
-                <ComboBoxItem Content="Offline - Fast (10B/sec)"/>
-                <ComboBoxItem Content="Offline - Slow (10k/sec)"/>
-                <ComboBoxItem Content="Online - No Limits (10/sec)"/>
-                <ComboBoxItem Content="Online - Throttled (100/hr)"/>
-            </ComboBox>
-            
-            <!-- Crack time -->
-            <TextBlock Text="{Binding PasswordStrength.CrackTimeDisplay}"
-               FontSize="12"
-               Foreground="DarkGray"
-               Margin="0,0,0,5"/>
-
-        </StackPanel>
-
         <!-- Password Length Label and Textbox -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Password Length:"
-                       Margin="0,0,0,5"/>
+                       Margin="0,5,0,5"/>
             <TextBox Text="{Binding PasswordLength, Mode=OneWay}"
                      IsReadOnly="True"
                      FontSize="12"
                      MinWidth="22"
                      TextAlignment="Center"
-                     Margin="5,0,0,5"/>
+                     Margin="5,5,0,5"/>
         </StackPanel>
         
         <!-- Password length slider -->

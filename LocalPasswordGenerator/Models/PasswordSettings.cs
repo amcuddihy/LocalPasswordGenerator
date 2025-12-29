@@ -24,6 +24,4 @@ public class PasswordSettings
     public bool IncludeNumbers { get; set; } = true;
 
     public bool IncludeSymbols { get; set; } = true;
-
-    public int CrackSpeedSetting { get; set; } = 1; // 0-3, 0 = Fast, 3 = Slow
 }

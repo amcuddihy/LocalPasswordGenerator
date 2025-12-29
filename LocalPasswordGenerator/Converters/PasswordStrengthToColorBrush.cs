@@ -5,6 +5,9 @@ using System.Windows.Media;
 
 namespace LocalPasswordGenerator.Converters;
 
+// Deleting this causes a weird build error in a .g.cs file that I've never seen before. 
+// I will need to figure out why this is happening, but for now just leaving it here. 
+
 public class PasswordStrengthToColorBrush : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
