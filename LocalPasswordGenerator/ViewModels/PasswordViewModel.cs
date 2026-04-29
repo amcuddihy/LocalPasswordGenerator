@@ -126,7 +126,7 @@ public class PasswordViewModel : INotifyPropertyChanged
     {
         // Reset to default special characters if the field is empty
         // If the user doesn't want special characters, they should uncheck the include check box
-        // Otherwise the password generator will fail and the user will be confused by the empty text box 
+        // Otherwise the password generator algorithm will fail and the user might be confused by the empty text box 
         if (string.IsNullOrEmpty(AllowedSpecialCharacters)) {
             SetSymbolsToDefault();
         }

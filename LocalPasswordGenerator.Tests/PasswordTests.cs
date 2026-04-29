@@ -1,15 +1,17 @@
 using LocalPasswordGenerator.Models;
+using LocalPasswordGenerator.Services;
 
 namespace LocalPasswordGenerator.Tests;
 
 public class PasswordTests 
 {
     [Fact]
-    public void GeneratesPassword_WithCorrectLength() {
+    public void CanGeneratePasswordWithDefaultSettings() {
         var passwordSettings = new PasswordSettings();
         passwordSettings.PasswordLength = 12;
         
-        var password = new PasswordGenerator().Generate(passwordSettings);
+        var passwordGeneratorService = new SimplePasswordGeneratorService();
+        var password = passwordGeneratorService.GeneratePassword(passwordSettings);
 
         Assert.Equal(12, password.Length);
     }
@@ -22,7 +24,8 @@ public class PasswordTests
         passwordSettings.IncludeNumbers = true;
         passwordSettings.IncludeSymbols = true;
 
-        var password = new PasswordGenerator().Generate(passwordSettings);
+        var passwordGeneratorService = new SimplePasswordGeneratorService();
+        var password = passwordGeneratorService.GeneratePassword(passwordSettings);
 
         Assert.Contains(password, c => char.IsLower(c));
         Assert.Contains(password, c => char.IsUpper(c));
